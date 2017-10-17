@@ -52,10 +52,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
+import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.retentionmagic.SupportFragment;
 import org.dmfs.android.retentionmagic.annotations.Parameter;
 import org.dmfs.android.retentionmagic.annotations.Retain;
+import org.dmfs.tasks.contract.TaskContract;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
+import org.dmfs.tasks.data.SubtasksSource;
 import org.dmfs.tasks.model.ContentSet;
 import org.dmfs.tasks.model.Model;
 import org.dmfs.tasks.model.OnContentChangeListener;
@@ -64,12 +67,17 @@ import org.dmfs.tasks.model.TaskFieldAdapters;
 import org.dmfs.tasks.notification.TaskNotificationHandler;
 import org.dmfs.tasks.share.ShareIntentFactory;
 import org.dmfs.tasks.utils.ContentValueMapper;
+import org.dmfs.tasks.utils.Darkened;
 import org.dmfs.tasks.utils.OnModelLoadedListener;
+import org.dmfs.tasks.widget.SubtasksView;
 import org.dmfs.tasks.widget.TaskView;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -130,6 +138,8 @@ public class ViewTaskFragment extends SupportFragment
      * The actual detail view. We store this direct reference to be able to clear it when the fragment gets detached.
      */
     private TaskView mDetailView;
+
+    private CompositeDisposable mDisposables;
 
     private int mListColor;
     private int mOldStatus = -1;
@@ -208,14 +218,6 @@ public class ViewTaskFragment extends SupportFragment
     }
 
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon screen orientation changes).
-     */
-    public ViewTaskFragment()
-    {
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -266,6 +268,7 @@ public class ViewTaskFragment extends SupportFragment
             mDetailView.setValues(null);
         }
 
+        mDisposables.dispose();
     }
 
 
@@ -319,6 +322,8 @@ public class ViewTaskFragment extends SupportFragment
             mTaskUri = null;
             loadUri(uri);
         }
+
+        mDisposables = new CompositeDisposable();
 
         return mRootView;
     }
@@ -401,7 +406,11 @@ public class ViewTaskFragment extends SupportFragment
         if ((oldUri == null) != (uri == null))
         {
             /*
+<<<<<<< HEAD
 			 * getActivity().invalidateOptionsMenu() doesn't work in Android 2.x so use the compat lib
+=======
+             * getActivity().invalidateOptionsMenu() doesn't work in Android 2.x so use the compat lib
+>>>>>>> bb000fc... Show subtasks on details view. #442
 			 */
             ActivityCompat.invalidateOptionsMenu(getActivity());
         }
@@ -492,7 +501,11 @@ public class ViewTaskFragment extends SupportFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         /*
+<<<<<<< HEAD
 		 * Don't show any options if we don't have a task to show.
+=======
+         * Don't show any options if we don't have a task to show.
+>>>>>>> bb000fc... Show subtasks on details view. #442
 		 */
         if (mTaskUri != null)
         {
@@ -717,6 +730,23 @@ public class ViewTaskFragment extends SupportFragment
                 postUpdateView();
             }
         }
+
+        mDisposables.add(
+                new SubtasksSource(mAppContext, mTaskUri)
+                        .subscribe(new Consumer<Iterable<RowDataSnapshot<TaskContract.Tasks>>>()
+                        {
+                            @Override
+                            public void accept(Iterable<RowDataSnapshot<TaskContract.Tasks>> subTasks)
+                            {
+                                if (subTasks.iterator().hasNext())
+                                {
+                                    new SubtasksView(mContent).update(subTasks);
+                                    ((TextView) mContent.findViewById(R.id.opentasks_view_item_task_details_subtitles_section_header))
+                                            .setTextColor(new Darkened(mListColor).argb());
+                                    mContent.requestLayout();
+                                }
+                            }
+                        }));
     }
 
 

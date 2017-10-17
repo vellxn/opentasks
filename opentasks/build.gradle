@@ -42,6 +42,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -52,6 +55,7 @@ dependencies {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
     compile project(':opentasks-provider')
+    compile project(':opentaskspal')
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'com.github.dmfs:color-picker:1.0'
     compile ('au.com.codeka:carrot:2.4.0'){
@@ -64,6 +68,9 @@ dependencies {
         exclude module: 'jems'
     }
     compile 'org.dmfs:jems:' + JEMS_VERSION
+    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.github.dmfs.bolts:color-bolts:' + BOLTS_VERSION
 
     testCompile 'junit:junit:4.12'
 

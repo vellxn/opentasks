@@ -14,28 +14,34 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.rowsets;
+package org.dmfs.tasks.utils;
 
-import org.dmfs.android.contentpal.RowReference;
-import org.dmfs.android.contentpal.RowSet;
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.predicates.ReferringTo;
-import org.dmfs.android.contentpal.rowsets.DelegatingRowSet;
-import org.dmfs.android.contentpal.rowsets.QueryRowSet;
+import android.content.Context;
+
+import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.tasks.contract.TaskContract;
+import org.dmfs.tasks.data.TaskUri;
 
 
 /**
- * {@link RowSet} for the subtasks of a given task.
+ * {@link TaskDetailsUi} for showing the task details for a subtask.
  *
  * @author Gabor Keszthelyi
  */
-public final class Subtasks extends DelegatingRowSet<TaskContract.Tasks>
+public final class SubtaskTaskDetailsUi implements TaskDetailsUi
 {
+    private final RowDataSnapshot<TaskContract.Tasks> mSubtaskData;
 
-    public Subtasks(View<TaskContract.Tasks> view, RowReference<TaskContract.Tasks> parentTask)
+
+    public SubtaskTaskDetailsUi(RowDataSnapshot<TaskContract.Tasks> subtaskData)
     {
-        super(new QueryRowSet<>(view, new ReferringTo<>(TaskContract.Tasks.PARENT_ID, parentTask)));
+        mSubtaskData = subtaskData;
     }
 
+
+    @Override
+    public void show(Context context)
+    {
+        new BasicTaskDetailsUi(new TaskUri(context, mSubtaskData).value()).show(context);
+    }
 }

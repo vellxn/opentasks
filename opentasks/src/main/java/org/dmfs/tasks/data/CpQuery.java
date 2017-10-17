@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.rowsets;
+package org.dmfs.tasks.data;
 
-import org.dmfs.android.contentpal.RowReference;
+import android.content.ContentProviderClient;
+import android.content.Context;
+
 import org.dmfs.android.contentpal.RowSet;
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.predicates.ReferringTo;
-import org.dmfs.android.contentpal.rowsets.DelegatingRowSet;
-import org.dmfs.android.contentpal.rowsets.QueryRowSet;
-import org.dmfs.tasks.contract.TaskContract;
 
 
 /**
- * {@link RowSet} for the subtasks of a given task.
+ * Represents a ContentProvider query resulting in ContentPal's {@link RowSet}.
  *
  * @author Gabor Keszthelyi
  */
-public final class Subtasks extends DelegatingRowSet<TaskContract.Tasks>
+public interface CpQuery<T>
 {
 
-    public Subtasks(View<TaskContract.Tasks> view, RowReference<TaskContract.Tasks> parentTask)
-    {
-        super(new QueryRowSet<>(view, new ReferringTo<>(TaskContract.Tasks.PARENT_ID, parentTask)));
-    }
+    /**
+     * Returns the {@link RowSet} that represent the result of this query.
+     */
+    RowSet<T> rowSet(ContentProviderClient client, Context appContext);
 
 }

@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.views;
+package org.dmfs.opentaskspal.readdata;
 
-import android.content.ContentProviderClient;
-
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.views.BaseView;
-import org.dmfs.android.contentpal.views.DelegatingView;
-import org.dmfs.tasks.contract.TaskContract;
+import org.dmfs.android.contentpal.RowDataSnapshot;
+import org.dmfs.optional.decorators.DelegatingOptional;
+import org.dmfs.tasks.contract.TaskContract.Tasks;
 
 
 /**
- * {@link View} for the {@link TaskContract.Tasks} table.
- *
  * @author Gabor Keszthelyi
  */
-public final class TasksView extends DelegatingView<TaskContract.Tasks>
+public final class TaskTitle extends DelegatingOptional<CharSequence>
 {
-    public TasksView(String authority, ContentProviderClient client, String... projection)
+    public TaskTitle(RowDataSnapshot<Tasks> rowDataSnapshot)
     {
-        super(new BaseView<TaskContract.Tasks>(client, TaskContract.Tasks.getContentUri(authority), projection));
+        // TODO Make it lazy? Can we have a base class for that to avoid using Single and .value()?
+        super(rowDataSnapshot.charData(Tasks.TITLE));
     }
 }

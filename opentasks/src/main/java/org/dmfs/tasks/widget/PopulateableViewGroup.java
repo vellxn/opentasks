@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.views;
+package org.dmfs.tasks.widget;
 
-import android.content.ContentProviderClient;
-
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.views.BaseView;
-import org.dmfs.android.contentpal.views.DelegatingView;
-import org.dmfs.tasks.contract.TaskContract;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 /**
- * {@link View} for the {@link TaskContract.Tasks} table.
+ * {@link PopulateableView} that simply adds the views to the provided {@link ViewGroup} as child views.
  *
  * @author Gabor Keszthelyi
  */
-public final class TasksView extends DelegatingView<TaskContract.Tasks>
+public final class PopulateableViewGroup<V extends View> implements PopulateableView<V>
 {
-    public TasksView(String authority, ContentProviderClient client, String... projection)
+    private final ViewGroup mViewGroup;
+
+
+    public PopulateableViewGroup(ViewGroup viewGroup)
     {
-        super(new BaseView<TaskContract.Tasks>(client, TaskContract.Tasks.getContentUri(authority), projection));
+        mViewGroup = viewGroup;
+    }
+
+
+    @Override
+    public void populate(Iterable<V> views)
+    {
+        for (V view : views)
+        {
+            mViewGroup.addView(view);
+        }
     }
 }

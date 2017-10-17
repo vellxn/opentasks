@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.views;
+package org.dmfs.tasks.utils;
 
-import android.content.ContentProviderClient;
-
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.views.BaseView;
-import org.dmfs.android.contentpal.views.DelegatingView;
-import org.dmfs.tasks.contract.TaskContract;
+import android.content.Context;
 
 
 /**
- * {@link View} for the {@link TaskContract.Tasks} table.
+ * Represents the task details UI which can be shown.
  *
  * @author Gabor Keszthelyi
  */
-public final class TasksView extends DelegatingView<TaskContract.Tasks>
+public interface TaskDetailsUi
 {
-    public TasksView(String authority, ContentProviderClient client, String... projection)
-    {
-        super(new BaseView<TaskContract.Tasks>(client, TaskContract.Tasks.getContentUri(authority), projection));
-    }
+    /**
+     * Shows the task details.
+     */
+    void show(Context context);
 }
