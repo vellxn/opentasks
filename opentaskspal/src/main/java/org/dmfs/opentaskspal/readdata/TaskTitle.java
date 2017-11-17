@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.rowsets;
+package org.dmfs.opentaskspal.readdata;
 
-import org.dmfs.android.contentpal.RowReference;
-import org.dmfs.android.contentpal.RowSet;
-import org.dmfs.android.contentpal.View;
-import org.dmfs.android.contentpal.predicates.ReferringTo;
-import org.dmfs.android.contentpal.rowsets.DelegatingRowSet;
-import org.dmfs.android.contentpal.rowsets.QueryRowSet;
+import org.dmfs.android.contentpal.RowDataSnapshot;
+import org.dmfs.optional.Optional;
+import org.dmfs.optional.decorators.DelegatingOptional;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
 
 /**
- * {@link RowSet} for the subtasks of a given task.
+ * {@link Optional} for the title value of a task.
  *
  * @author Gabor Keszthelyi
  */
-public final class Subtasks extends DelegatingRowSet<Tasks>
+public final class TaskTitle extends DelegatingOptional<CharSequence>
 {
-    public static final String[] PROJECTION = { Tasks.PARENT_ID };
+    public static final String[] PROJECTION = { Tasks.TITLE };
 
 
-    public Subtasks(View<Tasks> view, RowReference<Tasks> parentTask)
+    public TaskTitle(RowDataSnapshot<Tasks> rowDataSnapshot)
     {
-        super(new QueryRowSet<>(view, new ReferringTo<>(Tasks.PARENT_ID, parentTask)));
+        super(rowDataSnapshot.charData(Tasks.TITLE));
     }
-
 }
