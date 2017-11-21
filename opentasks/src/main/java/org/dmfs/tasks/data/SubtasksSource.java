@@ -20,13 +20,12 @@ import android.content.Context;
 import android.net.Uri;
 
 import org.dmfs.android.contentpal.RowDataSnapshot;
-import org.dmfs.tasks.contract.TaskContract;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
+import org.dmfs.tasks.utils.rxjava.single.DelegatingSingle;
 import org.dmfs.tasks.utils.rxjava.singlesource.Offloading;
 import org.dmfs.tasks.widget.SubtaskView;
 
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 
 
 /**
@@ -34,18 +33,12 @@ import io.reactivex.SingleObserver;
  *
  * @author Gabor Keszthelyi
  */
-public final class SubtasksSource extends Single<Iterable<RowDataSnapshot<TaskContract.Tasks>>>
+public final class SubtasksSource extends DelegatingSingle<Iterable<RowDataSnapshot<Tasks>>>
 {
-    private final Context mAppContext;
-    private final Uri mTaskUri;
-    private final String[] mProjection;
-
-
     public SubtasksSource(Context appContext, Uri taskUri, String... projection)
     {
-        mAppContext = appContext;
-        mTaskUri = taskUri;
-        mProjection = projection;
+        super(new Offloading<>(
+                new CpQuerySource<>(appContext, new SubtasksCpQuery(taskUri, projection))));
     }
 
 
@@ -54,12 +47,4 @@ public final class SubtasksSource extends Single<Iterable<RowDataSnapshot<TaskCo
         this(appContext, taskUri, SubtaskView.TASKS_PROJECTION);
     }
 
-
-    @Override
-    protected void subscribeActual(SingleObserver<? super Iterable<RowDataSnapshot<Tasks>>> observer)
-    {
-        new Offloading<>(
-                new CpQuerySource<>(mAppContext, new SubtasksCpQuery(mTaskUri, mProjection))
-        ).subscribe(observer);
-    }
 }
