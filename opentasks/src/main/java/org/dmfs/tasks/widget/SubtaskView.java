@@ -36,7 +36,7 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
 import org.dmfs.tasks.databinding.OpentasksViewItemTaskDetailsSubtaskBinding;
 import org.dmfs.tasks.utils.DateFormatter;
 import org.dmfs.tasks.utils.DateFormatter.DateFormatContext;
-import org.dmfs.tasks.utils.SubtaskTaskDetailsUi;
+import org.dmfs.tasks.utils.RowDataTaskDetailsUi;
 
 
 /**
@@ -81,7 +81,7 @@ public final class SubtaskView extends FrameLayout implements SmartView<RowDataS
             @Override
             public void onClick(View v)
             {
-                new SubtaskTaskDetailsUi(subtaskData).show(v.getContext());
+                new RowDataTaskDetailsUi(subtaskData).show(v.getContext());
             }
         });
 

@@ -24,16 +24,16 @@ import org.dmfs.tasks.data.TaskUri;
 
 
 /**
- * {@link TaskDetailsUi} for showing the task details for a subtask.
+ * {@link TaskDetailsUi} that takes a {@link RowDataSnapshot}.
  *
  * @author Gabor Keszthelyi
  */
-public final class SubtaskTaskDetailsUi implements TaskDetailsUi
+public final class RowDataTaskDetailsUi implements TaskDetailsUi
 {
     private final RowDataSnapshot<TaskContract.Tasks> mSubtaskData;
 
 
-    public SubtaskTaskDetailsUi(RowDataSnapshot<TaskContract.Tasks> subtaskData)
+    public RowDataTaskDetailsUi(RowDataSnapshot<TaskContract.Tasks> subtaskData)
     {
         mSubtaskData = subtaskData;
     }
