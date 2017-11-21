@@ -14,40 +14,31 @@
  * limitations under the License.
  */
 
-package org.dmfs.tasks.data;
+package org.dmfs.tasks.utils.rxjava.singlesource;
 
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * {@link SingleSource} decorator/adapter that sets the threading so that the work is on {@link Schedulers#io()}
- * and delivery is on UI thread.
+ * Base class for {@link SingleSource}s that delegate to another {@link SingleSource}.
  *
  * @author Gabor Keszthelyi
  */
-// TODO Okay to use rx.Single and rx.SingleSource 'interchangeably' while decorating, delegating?
-public final class Offloading<T> extends Single<T>
+public abstract class DelegatingSingleSource<T> implements SingleSource<T>
 {
     private final SingleSource<T> mDelegate;
 
 
-    public Offloading(SingleSource<T> delegate)
+    protected DelegatingSingleSource(SingleSource<T> delegate)
     {
         mDelegate = delegate;
     }
 
 
     @Override
-    protected void subscribeActual(@NonNull SingleObserver<? super T> observer)
+    public final void subscribe(SingleObserver<? super T> observer)
     {
-        Single.wrap(mDelegate)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
+        mDelegate.subscribe(observer);
     }
 }

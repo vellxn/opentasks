@@ -22,6 +22,7 @@ import android.net.Uri;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.tasks.contract.TaskContract;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
+import org.dmfs.tasks.utils.rxjava.singlesource.Offloading;
 import org.dmfs.tasks.widget.SubtaskView;
 
 import io.reactivex.Single;

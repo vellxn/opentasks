@@ -22,10 +22,10 @@ import android.net.Uri;
 
 import org.dmfs.provider.tasks.AuthorityUtil;
 import org.dmfs.tasks.contract.TaskContract;
+import org.dmfs.tasks.utils.rxjava.singlesource.DelegatingSingleSource;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
@@ -37,38 +37,27 @@ import io.reactivex.annotations.NonNull;
  *
  * @author Gabor Keszthelyi
  */
-public class ContentProviderClientSource implements SingleSource<ContentProviderClient>
+public class ContentProviderClientSource extends DelegatingSingleSource<ContentProviderClient>
 {
-    private final Context mContext;
-    private final Uri mUri;
 
-
-    public ContentProviderClientSource(Context context, Uri uri)
+    public ContentProviderClientSource(final Context context, final Uri uri)
     {
-        mContext = context;
-        mUri = uri;
+        super(Single.create(new SingleOnSubscribe<ContentProviderClient>()
+        {
+            @Override
+            public void subscribe(@NonNull SingleEmitter<ContentProviderClient> emitter) throws Exception
+            {
+                ContentProviderClient client = context.getContentResolver().acquireContentProviderClient(uri);
+                emitter.setDisposable(new ContentProviderClientDisposable(client));
+                emitter.onSuccess(client);
+            }
+        }));
     }
 
 
     public ContentProviderClientSource(Context context)
     {
         this(context, TaskContract.getContentUri(AuthorityUtil.taskAuthority(context)));
-    }
-
-
-    @Override
-    public void subscribe(@NonNull SingleObserver<? super ContentProviderClient> observer)
-    {
-        Single.create(new SingleOnSubscribe<ContentProviderClient>()
-        {
-            @Override
-            public void subscribe(@NonNull SingleEmitter<ContentProviderClient> emitter) throws Exception
-            {
-                ContentProviderClient client = mContext.getContentResolver().acquireContentProviderClient(mUri);
-                emitter.setDisposable(new ContentProviderClientDisposable(client));
-                emitter.onSuccess(client);
-            }
-        }).subscribe(observer);
     }
 
 }

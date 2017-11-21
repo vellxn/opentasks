@@ -24,9 +24,9 @@ import org.dmfs.android.contentpal.RowSet;
 import org.dmfs.android.contentpal.RowSnapshot;
 import org.dmfs.android.contentpal.rowsets.Cached;
 import org.dmfs.iterables.decorators.Mapped;
+import org.dmfs.tasks.utils.rxjava.singlesource.DelegatingSingleSource;
 
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -38,29 +38,18 @@ import io.reactivex.functions.Function;
  *
  * @author Gabor Keszthelyi
  */
-public final class CpQuerySource<T> implements SingleSource<Iterable<RowDataSnapshot<T>>>
+public final class CpQuerySource<T> extends DelegatingSingleSource<Iterable<RowDataSnapshot<T>>>
 {
-    private final Context mAppContext;
-    private final CpQuery<T> mCpQuery;
 
-
-    public CpQuerySource(Context context, CpQuery<T> cpQuery)
+    public CpQuerySource(final Context context, final CpQuery<T> cpQuery)
     {
-        mAppContext = context.getApplicationContext();
-        mCpQuery = cpQuery;
-    }
-
-
-    @Override
-    public void subscribe(SingleObserver<? super Iterable<RowDataSnapshot<T>>> observer)
-    {
-        Single.wrap(new ContentProviderClientSource(mAppContext))
+        super(Single.wrap(new ContentProviderClientSource(context))
                 .map(new Function<ContentProviderClient, Iterable<RowDataSnapshot<T>>>()
                 {
                     @Override
                     public Iterable<RowDataSnapshot<T>> apply(@NonNull ContentProviderClient client) throws Exception
                     {
-                        RowSet<T> frozen = new Cached<>(mCpQuery.rowSet(client, mAppContext));
+                        RowSet<T> frozen = new Cached<>(cpQuery.rowSet(client, context));
                         frozen.iterator(); // To actually freeze it
 
                         return new Mapped<>(frozen, new org.dmfs.iterators.Function<RowSnapshot<T>, RowDataSnapshot<T>>()
@@ -72,8 +61,7 @@ public final class CpQuerySource<T> implements SingleSource<Iterable<RowDataSnap
                             }
                         });
                     }
-                })
-                .subscribe(observer);
+                }));
     }
 
 }

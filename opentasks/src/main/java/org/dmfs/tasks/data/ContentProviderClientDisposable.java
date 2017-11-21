@@ -19,6 +19,8 @@ package org.dmfs.tasks.data;
 import android.content.ContentProviderClient;
 import android.os.Build;
 
+import org.dmfs.tasks.utils.rxjava.disposable.DelegatingDisposable;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 

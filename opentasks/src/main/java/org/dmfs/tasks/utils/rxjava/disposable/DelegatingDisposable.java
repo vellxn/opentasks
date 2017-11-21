@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.dmfs.tasks.data;
+package org.dmfs.tasks.utils.rxjava.disposable;
 
 import io.reactivex.disposables.Disposable;
 
