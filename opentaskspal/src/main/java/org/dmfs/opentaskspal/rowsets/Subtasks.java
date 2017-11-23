@@ -32,8 +32,6 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
  */
 public final class Subtasks extends DelegatingRowSet<Tasks>
 {
-    public static final String[] PROJECTION = { Tasks.PARENT_ID };
-
 
     public Subtasks(View<Tasks> view, RowReference<Tasks> parentTask)
     {
