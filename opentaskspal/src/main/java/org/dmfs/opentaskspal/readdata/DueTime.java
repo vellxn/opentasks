@@ -47,8 +47,8 @@ public final class DueTime extends DelegatingOptional<DateTime>
         projection.add(Tasks.DUE);
         projection.add(Tasks.DTSTART);
         projection.add(Tasks.DURATION);
-        projection.addAll(Arrays.asList(TaskDateTime.PROJECTION));
-        PROJECTION = projection.toArray(new String[3 + TaskDateTime.PROJECTION.length]);
+        projection.addAll(Arrays.asList(TaskDateTimeSingle.PROJECTION));
+        PROJECTION = projection.toArray(new String[3 + TaskDateTimeSingle.PROJECTION.length]);
     }
 
     public DueTime(RowDataSnapshot<Tasks> rowDataSnapshot)
@@ -61,12 +61,12 @@ public final class DueTime extends DelegatingOptional<DateTime>
     {
         if (data.charData(Tasks.DUE).isPresent())
         {
-            return new SinglePresent<>(new TaskDateTime(data.charData(Tasks.DUE).value(), data));
+            return new SinglePresent<>(new TaskDateTimeSingle(data.charData(Tasks.DUE).value(), data));
         }
 
         if (data.charData(Tasks.DURATION).isPresent() && data.charData(Tasks.DTSTART).isPresent())
         {
-            DateTime start = new TaskDateTime(data.charData(Tasks.DTSTART).value(), data).value();
+            DateTime start = new TaskDateTimeSingle(data.charData(Tasks.DTSTART).value(), data).value();
             Duration duration = Duration.parse(data.charData(Tasks.DURATION).value().toString());
             return new Present<>(start.addDuration(duration));
         }
