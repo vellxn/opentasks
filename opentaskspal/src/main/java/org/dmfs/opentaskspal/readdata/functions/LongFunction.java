@@ -14,33 +14,22 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.readdata;
+package org.dmfs.opentaskspal.readdata.functions;
 
-import android.support.annotation.NonNull;
-
-import org.dmfs.android.bolts.color.Color;
-import org.dmfs.jems.single.Single;
+import org.dmfs.iterators.Function;
 
 
 /**
+ * {@link Function} that converts a {@link CharSequence} to an {@link Long}
+ *
  * @author Gabor Keszthelyi
- * @deprecated use it from Bolts when available
  */
-@Deprecated
-final class SingleColor implements Color
+// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
+public final class LongFunction implements Function<CharSequence, Long>
 {
-    private final Single<Color> mDelegate;
-
-
-    public SingleColor(@NonNull Single<Color> delegate)
-    {
-        mDelegate = delegate;
-    }
-
-
     @Override
-    public int argb()
+    public Long apply(CharSequence charSequence)
     {
-        return mDelegate.value().argb();
+        return Long.valueOf(charSequence.toString());
     }
 }

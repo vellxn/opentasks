@@ -21,9 +21,10 @@ import android.support.annotation.NonNull;
 
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
-import org.dmfs.android.contentpal.RowSnapshot;
 import org.dmfs.android.contentpal.projections.SingleColProjection;
 import org.dmfs.jems.single.Single;
+import org.dmfs.jems.single.decorators.DelegatingSingle;
+import org.dmfs.opentaskspal.readdata.functions.LongFunction;
 
 
 /**
@@ -31,28 +32,14 @@ import org.dmfs.jems.single.Single;
  *
  * @author Gabor Keszthelyi
  */
-public final class Id implements Single<Long>
+public final class Id extends DelegatingSingle<Long>
 {
     public static final Projection<?> PROJECTION = new SingleColProjection<>(BaseColumns._ID);
-
-    private final RowDataSnapshot<?> mRowDataSnapshot;
 
 
     public Id(@NonNull RowDataSnapshot<?> rowDataSnapshot)
     {
-        mRowDataSnapshot = rowDataSnapshot;
+        super(new RowCharData<>(rowDataSnapshot, BaseColumns._ID, new LongFunction()));
     }
 
-
-    public Id(@NonNull RowSnapshot<?> rowSnapshot)
-    {
-        this(rowSnapshot.values());
-    }
-
-
-    @Override
-    public Long value()
-    {
-        return Long.valueOf(mRowDataSnapshot.charData(BaseColumns._ID).value().toString());
-    }
 }

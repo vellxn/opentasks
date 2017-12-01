@@ -16,11 +16,15 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.Composite;
 import org.dmfs.android.contentpal.projections.SingleColProjection;
 import org.dmfs.iterators.Function;
+import org.dmfs.opentaskspal.readdata.functions.BooleanFunction;
+import org.dmfs.opentaskspal.readdata.functions.LongFunction;
 import org.dmfs.optional.Optional;
 import org.dmfs.optional.decorators.DelegatingOptional;
 import org.dmfs.optional.decorators.Mapped;
@@ -32,36 +36,28 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
  * An {@link Optional} of a specific {@link DateTime} value of a task.
  *
  * @author Marten Gajda
+ * @author Gabor Keszthelyi
  */
 public final class TaskDateTime extends DelegatingOptional<DateTime>
 {
     public static final Projection<Tasks> PROJECTION = new Composite<>(
-            new SingleColProjection<Tasks>(Tasks.IS_ALLDAY), EffectiveTimezone.PROJECTION);
+            new SingleColProjection<Tasks>(Tasks.IS_ALLDAY),
+            EffectiveTimezone.PROJECTION);
 
 
-    public TaskDateTime(String columnName, final RowDataSnapshot<Tasks> dataSnapshot)
+    public TaskDateTime(@NonNull String columnName, @NonNull final RowDataSnapshot<Tasks> data)
     {
-        super(
-                new Mapped<>(
-                        new Function<DateTime, DateTime>()
-                        {
-                            @Override
-                            public DateTime apply(DateTime dateTime)
-                            {
-                                return "1".equals(dataSnapshot.charData(Tasks.IS_ALLDAY).value("0").toString()) ?
-                                        dateTime.toAllDay() :
-                                        dateTime.shiftTimeZone(new EffectiveTimezone(dataSnapshot).value());
-                            }
-                        },
-                        new Mapped<>(
-                                new Function<CharSequence, DateTime>()
-                                {
-                                    @Override
-                                    public DateTime apply(CharSequence timestampChars)
-                                    {
-                                        return new DateTime(Long.parseLong(timestampChars.toString()));
-                                    }
-                                },
-                                dataSnapshot.charData(columnName))));
+        super(new Mapped<>(
+                new Function<Long, DateTime>()
+                {
+                    @Override
+                    public DateTime apply(Long timeStamp)
+                    {
+                        return new OptionalRowCharData<>(data, Tasks.IS_ALLDAY, new BooleanFunction()).value(false) ?
+                                new DateTime(timeStamp).toAllDay() :
+                                new DateTime(timeStamp).shiftTimeZone(new EffectiveTimezone(data).value());
+                    }
+                },
+                new OptionalRowCharData<>(data, columnName, new LongFunction())));
     }
 }

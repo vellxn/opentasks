@@ -16,6 +16,8 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.jems.single.Single;
 import org.dmfs.jems.single.elementary.ValueSingle;
 import org.dmfs.optional.Optional;
@@ -32,14 +34,14 @@ final class OptionalFallbackSingle<T> implements Single<T>
     private final Single<T> mFallback;
 
 
-    public OptionalFallbackSingle(Optional<T> optional, Single<T> fallback)
+    public OptionalFallbackSingle(@NonNull Optional<T> optional, @NonNull Single<T> fallback)
     {
         mOptional = optional;
         mFallback = fallback;
     }
 
 
-    public OptionalFallbackSingle(Optional<T> optional, T fallback)
+    public OptionalFallbackSingle(@NonNull Optional<T> optional, @NonNull T fallback)
     {
         this(optional, new ValueSingle<T>(fallback));
     }

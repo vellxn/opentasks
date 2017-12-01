@@ -16,6 +16,8 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.Composite;
@@ -44,7 +46,7 @@ public final class EffectiveDueDate extends DelegatingOptional<DateTime>
             TaskDuration.PROJECTION);
 
 
-    public EffectiveDueDate(RowDataSnapshot<Tasks> rowDataSnapshot)
+    public EffectiveDueDate(@NonNull RowDataSnapshot<Tasks> rowDataSnapshot)
     {
         super(new FirstPresent<>(
                 new Seq<>(

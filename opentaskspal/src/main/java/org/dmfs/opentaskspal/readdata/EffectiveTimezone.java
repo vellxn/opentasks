@@ -16,12 +16,14 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.SingleColProjection;
 import org.dmfs.jems.single.Single;
+import org.dmfs.jems.single.decorators.DelegatingSingle;
 import org.dmfs.opentaskspal.readdata.functions.TimeZoneFunction;
-import org.dmfs.optional.decorators.Mapped;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
 import java.util.TimeZone;
@@ -31,24 +33,16 @@ import java.util.TimeZone;
  * The {@link Single} effective {@link TimeZone} of a task. If the task has no TimeZone, i.e. is floating, this will return the local {@link TimeZone}.
  *
  * @author Marten Gajda
+ * @author Gabor Keszthelyi
  */
-public final class EffectiveTimezone implements Single<TimeZone>
+public final class EffectiveTimezone extends DelegatingSingle<TimeZone>
 {
     public static final Projection<Tasks> PROJECTION = new SingleColProjection<>(Tasks.TZ);
 
-    private final RowDataSnapshot<Tasks> mTaskData;
 
-
-    public EffectiveTimezone(RowDataSnapshot<Tasks> taskData)
+    public EffectiveTimezone(@NonNull RowDataSnapshot<Tasks> taskData)
     {
-        mTaskData = taskData;
-    }
-
-
-    @Override
-    public TimeZone value()
-    {
-        return new Mapped<>(new TimeZoneFunction(), mTaskData.charData(Tasks.TZ)).value(TimeZone.getDefault());
+        super(new RowCharData<>(taskData, Tasks.TZ, new TimeZoneFunction()));
     }
 
 }

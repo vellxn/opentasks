@@ -16,13 +16,14 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.SingleColProjection;
 import org.dmfs.opentaskspal.readdata.functions.DurationFunction;
 import org.dmfs.optional.Optional;
 import org.dmfs.optional.decorators.DelegatingOptional;
-import org.dmfs.optional.decorators.Mapped;
 import org.dmfs.rfc5545.Duration;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
@@ -37,8 +38,8 @@ public final class TaskDuration extends DelegatingOptional<Duration>
     public static final Projection<Tasks> PROJECTION = new SingleColProjection<>(Tasks.DURATION);
 
 
-    public TaskDuration(RowDataSnapshot<Tasks> rowDataSnapshot)
+    public TaskDuration(@NonNull RowDataSnapshot<Tasks> rowData)
     {
-        super(new Mapped<>(new DurationFunction(), rowDataSnapshot.charData(Tasks.DURATION)));
+        super(new OptionalRowCharData<>(rowData, Tasks.DURATION, new DurationFunction()));
     }
 }

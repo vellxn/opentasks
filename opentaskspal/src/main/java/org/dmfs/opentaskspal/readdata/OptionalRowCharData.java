@@ -16,6 +16,8 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.iterators.Function;
 import org.dmfs.optional.decorators.DelegatingOptional;
@@ -29,7 +31,9 @@ import org.dmfs.optional.decorators.Mapped;
 @Deprecated
 final class OptionalRowCharData<T, R> extends DelegatingOptional<R>
 {
-    public OptionalRowCharData(RowDataSnapshot<T> rowDataSnapshot, String column, Function<CharSequence, R> mapFunction)
+    public OptionalRowCharData(@NonNull RowDataSnapshot<T> rowDataSnapshot,
+                               @NonNull String column,
+                               @NonNull Function<CharSequence, R> mapFunction)
     {
         super(new Mapped<>(mapFunction, rowDataSnapshot.charData(column)));
     }

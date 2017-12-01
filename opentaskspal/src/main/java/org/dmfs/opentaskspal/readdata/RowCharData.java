@@ -16,6 +16,8 @@
 
 package org.dmfs.opentaskspal.readdata;
 
+import android.support.annotation.NonNull;
+
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.iterators.Function;
 import org.dmfs.jems.single.Single;
@@ -33,7 +35,9 @@ final class RowCharData<T, R> implements Single<R>
     private final Function<CharSequence, R> mMapFunction;
 
 
-    public RowCharData(RowDataSnapshot<T> rowDataSnapshot, String column, Function<CharSequence, R> mapFunction)
+    public RowCharData(@NonNull RowDataSnapshot<T> rowDataSnapshot,
+                       @NonNull String column,
+                       @NonNull Function<CharSequence, R> mapFunction)
     {
         mRowDataSnapshot = rowDataSnapshot;
         mColumn = column;
