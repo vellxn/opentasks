@@ -21,10 +21,9 @@ import android.support.annotation.NonNull;
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.SingleColProjection;
-import org.dmfs.iterators.Function;
+import org.dmfs.opentaskspal.readdata.functions.IntegerFunction;
 import org.dmfs.optional.Optional;
 import org.dmfs.optional.decorators.DelegatingOptional;
-import org.dmfs.optional.decorators.Mapped;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
 
@@ -38,15 +37,8 @@ public final class PercentComplete extends DelegatingOptional<Integer>
     public static final Projection<Tasks> PROJECTION = new SingleColProjection<>(Tasks.PERCENT_COMPLETE);
 
 
-    public PercentComplete(@NonNull RowDataSnapshot<Tasks> task)
+    public PercentComplete(@NonNull RowDataSnapshot<Tasks> rowData)
     {
-        super(new Mapped<>(new Function<CharSequence, Integer>()
-        {
-            @Override
-            public Integer apply(CharSequence charSequence)
-            {
-                return Integer.valueOf(charSequence.toString());
-            }
-        }, task.charData(Tasks.PERCENT_COMPLETE)));
+        super(new OptionalRowCharData<>(rowData, Tasks.PERCENT_COMPLETE, new IntegerFunction()));
     }
 }

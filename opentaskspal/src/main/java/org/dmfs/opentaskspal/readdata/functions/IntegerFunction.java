@@ -17,20 +17,19 @@
 package org.dmfs.opentaskspal.readdata.functions;
 
 import org.dmfs.iterators.Function;
-import org.dmfs.rfc5545.Duration;
 
 
 /**
- * A {@link Function} which converts an RFC 5545 Duration {@link CharSequence} into a {@link Duration} object.
+ * {@link Function} that converts a {@link CharSequence} to an {@link Integer}
  *
- * @author Marten Gajda
+ * @author Gabor Keszthelyi
  */
 // TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
-public final class DurationFunction implements Function<CharSequence, Duration>
+public final class IntegerFunction implements Function<CharSequence, Integer>
 {
     @Override
-    public Duration apply(CharSequence durationCharSequence)
+    public Integer apply(CharSequence charSequence)
     {
-        return Duration.parse(durationCharSequence.toString());
+        return Integer.valueOf(charSequence.toString());
     }
 }

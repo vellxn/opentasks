@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.dmfs.opentaskspal.readdata.functions;
+package org.dmfs.opentaskspal.readdata;
 
+import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.iterators.Function;
-import org.dmfs.rfc5545.Duration;
+import org.dmfs.optional.decorators.DelegatingOptional;
+import org.dmfs.optional.decorators.Mapped;
 
 
 /**
- * A {@link Function} which converts an RFC 5545 Duration {@link CharSequence} into a {@link Duration} object.
- *
- * @author Marten Gajda
+ * @author Gabor Keszthelyi
+ * @deprecated use from ContentPal when available
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
-public final class DurationFunction implements Function<CharSequence, Duration>
+@Deprecated
+final class OptionalRowCharData<T, R> extends DelegatingOptional<R>
 {
-    @Override
-    public Duration apply(CharSequence durationCharSequence)
+    public OptionalRowCharData(RowDataSnapshot<T> rowDataSnapshot, String column, Function<CharSequence, R> mapFunction)
     {
-        return Duration.parse(durationCharSequence.toString());
+        super(new Mapped<>(mapFunction, rowDataSnapshot.charData(column)));
     }
 }

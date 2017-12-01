@@ -39,8 +39,9 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
 public final class EffectiveDueDate extends DelegatingOptional<DateTime>
 {
     public static final Projection<Tasks> PROJECTION = new Composite<>(
-            new MultiProjection<Tasks>(Tasks.DUE, Tasks.DTSTART, Tasks.DURATION),
-            TaskDateTime.PROJECTION);
+            new MultiProjection<Tasks>(Tasks.DUE, Tasks.DTSTART),
+            TaskDateTime.PROJECTION,
+            TaskDuration.PROJECTION);
 
 
     public EffectiveDueDate(RowDataSnapshot<Tasks> rowDataSnapshot)

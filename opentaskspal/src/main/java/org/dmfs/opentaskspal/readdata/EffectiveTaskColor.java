@@ -16,12 +16,11 @@
 
 package org.dmfs.opentaskspal.readdata;
 
-import android.support.annotation.NonNull;
-
 import org.dmfs.android.bolts.color.Color;
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.MultiProjection;
+import org.dmfs.opentaskspal.readdata.functions.ColorFunction;
 import org.dmfs.tasks.contract.TaskContract;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
@@ -32,25 +31,17 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
  *
  * @author Gabor Keszthelyi
  */
-public final class EffectiveTaskColor implements Color
+public final class EffectiveTaskColor extends DelegatingSingleColor
 {
     public static final Projection<Tasks> PROJECTION = new MultiProjection<>(Tasks.TASK_COLOR, Tasks.LIST_COLOR);
 
-    private final RowDataSnapshot<TaskContract.Tasks> mRowDataSnapshot;
 
-
-    public EffectiveTaskColor(@NonNull RowDataSnapshot<TaskContract.Tasks> rowDataSnapshot)
+    public EffectiveTaskColor(RowDataSnapshot<TaskContract.Tasks> rowData)
     {
-        mRowDataSnapshot = rowDataSnapshot;
+        super(new OptionalFallbackSingle<>(
+                new OptionalRowCharData<>(rowData, Tasks.TASK_COLOR, new ColorFunction()),
+                new RowCharData<>(rowData, Tasks.LIST_COLOR, new ColorFunction())
+        ));
     }
 
-
-    @Override
-    public int argb()
-    {
-        CharSequence colorCs = mRowDataSnapshot.charData(TaskContract.Tasks.TASK_COLOR)
-                .value(mRowDataSnapshot.charData(TaskContract.Tasks.LIST_COLOR).value());
-
-        return Integer.valueOf(colorCs.toString());
-    }
 }

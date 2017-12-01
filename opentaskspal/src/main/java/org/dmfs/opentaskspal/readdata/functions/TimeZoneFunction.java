@@ -26,6 +26,7 @@ import java.util.TimeZone;
  *
  * @author Marten Gajda
  */
+// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
 public class TimeZoneFunction implements Function<CharSequence, TimeZone>
 {
     @Override
