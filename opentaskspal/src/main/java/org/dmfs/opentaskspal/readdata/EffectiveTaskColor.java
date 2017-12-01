@@ -28,18 +28,18 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
 
 /**
  * {@link Color} for a task. Uses {@link Tasks#TASK_COLOR} if available,
- * fall backs to the mandatory {@link Tasks#LIST_COLOR} if not.
+ * fall backs to the mandatory {@link Tasks#LIST_COLOR} otherwise.
  *
  * @author Gabor Keszthelyi
  */
-public final class TaskColor implements Color
+public final class EffectiveTaskColor implements Color
 {
     public static final Projection<Tasks> PROJECTION = new MultiProjection<>(Tasks.TASK_COLOR, Tasks.LIST_COLOR);
 
     private final RowDataSnapshot<TaskContract.Tasks> mRowDataSnapshot;
 
 
-    public TaskColor(@NonNull RowDataSnapshot<TaskContract.Tasks> rowDataSnapshot)
+    public EffectiveTaskColor(@NonNull RowDataSnapshot<TaskContract.Tasks> rowDataSnapshot)
     {
         mRowDataSnapshot = rowDataSnapshot;
     }
