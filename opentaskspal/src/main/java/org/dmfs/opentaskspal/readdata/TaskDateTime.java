@@ -16,56 +16,52 @@
 
 package org.dmfs.opentaskspal.readdata;
 
-import android.support.annotation.NonNull;
-
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
-import org.dmfs.android.contentpal.projections.MultiProjection;
-import org.dmfs.jems.single.Single;
+import org.dmfs.android.contentpal.projections.Composite;
+import org.dmfs.android.contentpal.projections.SingleColProjection;
+import org.dmfs.iterators.Function;
+import org.dmfs.optional.Optional;
+import org.dmfs.optional.decorators.DelegatingOptional;
+import org.dmfs.optional.decorators.Mapped;
 import org.dmfs.rfc5545.DateTime;
 import org.dmfs.tasks.contract.TaskContract.Tasks;
 
-import java.util.TimeZone;
-
 
 /**
- * {@link Single} for creating a {@link DateTime} from the date-time related properties of a task.
- * Takes an already present timestamp, plus the separately stored timezone and all-day flag.
+ * An {@link Optional} of a specific {@link DateTime} value of a task.
  *
- * @author Gabor Keszthelyi
+ * @author Marten Gajda
  */
-public final class TaskDateTime implements Single<DateTime>
+public final class TaskDateTime extends DelegatingOptional<DateTime>
 {
-    public static final Projection<Tasks> PROJECTION = new MultiProjection<>(Tasks.TZ, Tasks.IS_ALLDAY);
-
-    private final Long mTimestamp;
-    private final String mTimeZoneId;
-    private final boolean mIsAllDay;
+    public static final Projection<Tasks> PROJECTION = new Composite<>(
+            new SingleColProjection<Tasks>(Tasks.IS_ALLDAY), EffectiveTimezone.PROJECTION);
 
 
-    public TaskDateTime(@NonNull Long timestamp, @NonNull String timeZoneId, @NonNull Boolean isAllDay)
+    public TaskDateTime(String columnName, final RowDataSnapshot<Tasks> dataSnapshot)
     {
-        mTimestamp = timestamp;
-        mTimeZoneId = timeZoneId;
-        mIsAllDay = isAllDay;
-    }
-
-
-    public TaskDateTime(@NonNull CharSequence timestamp, @NonNull CharSequence timeZoneId, @NonNull CharSequence isAllDay)
-    {
-        this(Long.valueOf(timestamp.toString()), timeZoneId.toString(), "1".equals(isAllDay.toString()));
-    }
-
-
-    public TaskDateTime(@NonNull CharSequence timestamp, @NonNull RowDataSnapshot<Tasks> rowData)
-    {
-        this(timestamp, rowData.charData(Tasks.TZ).value(), rowData.charData(Tasks.IS_ALLDAY).value());
-    }
-
-
-    @Override
-    public DateTime value()
-    {
-        return mIsAllDay ? new DateTime(mTimestamp).toAllDay() : new DateTime(TimeZone.getTimeZone(mTimeZoneId), mTimestamp);
+        super(
+                new Mapped<>(
+                        new Function<DateTime, DateTime>()
+                        {
+                            @Override
+                            public DateTime apply(DateTime dateTime)
+                            {
+                                return "1".equals(dataSnapshot.charData(Tasks.IS_ALLDAY).value("0").toString()) ?
+                                        dateTime.toAllDay() :
+                                        dateTime.shiftTimeZone(new EffectiveTimezone(dataSnapshot).value());
+                            }
+                        },
+                        new Mapped<>(
+                                new Function<CharSequence, DateTime>()
+                                {
+                                    @Override
+                                    public DateTime apply(CharSequence timestampChars)
+                                    {
+                                        return new DateTime(Long.parseLong(timestampChars.toString()));
+                                    }
+                                },
+                                dataSnapshot.charData(columnName))));
     }
 }
