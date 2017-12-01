@@ -25,19 +25,19 @@ import org.dmfs.jems.single.Single;
  * @deprecated use it from Bolts when available
  */
 @Deprecated
-abstract class DelegatingSingleColor implements Color
+final class SingleColor implements Color
 {
     private final Single<Color> mDelegate;
 
 
-    protected DelegatingSingleColor(Single<Color> delegate)
+    public SingleColor(Single<Color> delegate)
     {
         mDelegate = delegate;
     }
 
 
     @Override
-    public final int argb()
+    public int argb()
     {
         return mDelegate.value().argb();
     }

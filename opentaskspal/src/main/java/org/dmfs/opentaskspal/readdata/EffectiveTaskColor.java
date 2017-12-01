@@ -17,6 +17,7 @@
 package org.dmfs.opentaskspal.readdata;
 
 import org.dmfs.android.bolts.color.Color;
+import org.dmfs.android.bolts.color.colors.DelegatingColor;
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.MultiProjection;
@@ -31,16 +32,18 @@ import org.dmfs.tasks.contract.TaskContract.Tasks;
  *
  * @author Gabor Keszthelyi
  */
-public final class EffectiveTaskColor extends DelegatingSingleColor
+public final class EffectiveTaskColor extends DelegatingColor
 {
     public static final Projection<Tasks> PROJECTION = new MultiProjection<>(Tasks.TASK_COLOR, Tasks.LIST_COLOR);
 
 
     public EffectiveTaskColor(RowDataSnapshot<TaskContract.Tasks> rowData)
     {
-        super(new OptionalFallbackSingle<>(
-                new OptionalRowCharData<>(rowData, Tasks.TASK_COLOR, new ColorFunction()),
-                new RowCharData<>(rowData, Tasks.LIST_COLOR, new ColorFunction())
+        super(new SingleColor(
+                new OptionalFallbackSingle<>(
+                        new OptionalRowCharData<>(rowData, Tasks.TASK_COLOR, new ColorFunction()),
+                        new RowCharData<>(rowData, Tasks.LIST_COLOR, new ColorFunction())
+                )
         ));
     }
 
