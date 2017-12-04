@@ -50,6 +50,6 @@ final class OptionalFallbackSingle<T> implements Single<T>
     @Override
     public T value()
     {
-        return mOptional.value(mFallback.value());
+        return mOptional.isPresent() ? mOptional.value() : mFallback.value();
     }
 }
