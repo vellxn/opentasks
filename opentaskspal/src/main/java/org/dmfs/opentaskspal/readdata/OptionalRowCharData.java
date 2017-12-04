@@ -26,7 +26,7 @@ import org.dmfs.optional.decorators.Mapped;
 
 /**
  * @author Gabor Keszthelyi
- * @deprecated use from ContentPal when available
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
 @Deprecated
 final class OptionalRowCharData<T, R> extends DelegatingOptional<R>

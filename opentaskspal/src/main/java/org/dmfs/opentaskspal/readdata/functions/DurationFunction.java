@@ -24,8 +24,9 @@ import org.dmfs.rfc5545.Duration;
  * A {@link Function} which converts an RFC 5545 Duration {@link CharSequence} into a {@link Duration} object.
  *
  * @author Marten Gajda
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
+@Deprecated
 public final class DurationFunction implements Function<CharSequence, Duration>
 {
     @Override

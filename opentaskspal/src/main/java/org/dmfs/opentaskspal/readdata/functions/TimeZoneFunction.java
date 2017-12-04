@@ -25,8 +25,9 @@ import java.util.TimeZone;
  * A {@link Function} to get the {@link TimeZone} of a time zone ID.
  *
  * @author Marten Gajda
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
+@Deprecated
 public class TimeZoneFunction implements Function<CharSequence, TimeZone>
 {
     @Override

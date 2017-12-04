@@ -25,7 +25,9 @@ import org.dmfs.rfc5545.Duration;
  * A {@link BiFunction} which adds {@link DateTime} and {@link Duration} values.
  *
  * @author Marten Gajda
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
+@Deprecated
 public final class AddDurationBiFunction implements BiFunction<DateTime, Duration, DateTime>
 {
     @Override

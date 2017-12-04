@@ -26,7 +26,6 @@ import org.dmfs.iterators.Function;
  *
  * @author Gabor Keszthelyi
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
 public final class ColorFunction implements Function<CharSequence, Color>
 {
     @Override

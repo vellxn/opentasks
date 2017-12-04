@@ -23,8 +23,9 @@ import org.dmfs.iterators.Function;
  * {@link Function} that converts a {@link CharSequence} to an {@link Long}
  *
  * @author Gabor Keszthelyi
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
+@Deprecated
 public final class LongFunction implements Function<CharSequence, Long>
 {
     @Override

@@ -24,8 +24,9 @@ import org.dmfs.iterators.Function;
  * where the "1" is used for true and "0" is false.
  *
  * @author Gabor Keszthelyi
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
-// TODO Use org.dmfs.jems.function.Function when Mapped(Optional) supports it
+@Deprecated
 public final class BooleanFunction implements Function<CharSequence, Boolean>
 {
     @Override

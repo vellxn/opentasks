@@ -25,7 +25,7 @@ import org.dmfs.jems.single.Single;
 
 /**
  * @author Gabor Keszthelyi
- * @deprecated use from ContentPal when available
+ * @deprecated use it from contentpal when available or use solution from ContentPal/issues/136
  */
 @Deprecated
 final class RowCharData<T, R> implements Single<R>
