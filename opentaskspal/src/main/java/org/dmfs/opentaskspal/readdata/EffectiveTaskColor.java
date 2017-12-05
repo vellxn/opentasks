@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 
 import org.dmfs.android.bolts.color.Color;
 import org.dmfs.android.bolts.color.colors.DelegatingColor;
+import org.dmfs.android.bolts.color.elementary.SingleColor;
 import org.dmfs.android.contentpal.Projection;
 import org.dmfs.android.contentpal.RowDataSnapshot;
 import org.dmfs.android.contentpal.projections.MultiProjection;
